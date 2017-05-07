@@ -106,7 +106,7 @@ islands = list()
 for i in lookup_locations:
     islands.append(i)
 
-# def key_in_perms(to_perm):
+# def get_perms(to_perm):
 #     for perm in permed[str(len(perm_list))]:
 #         this_perm = list()
 #         for i in perm:
@@ -120,19 +120,26 @@ def list_without(aList, value):
             ret_list.append(i)
     return ret_list
 
-def dynamic_perms(perm_list, permed={}):
-    if str(len(perm_list)) not in permed:
-        permed[len(perm_list)] = []
-        if len(perm_list) > 1:
-            for val in reversed(perm_list):
-                for j in dynamic_perms(list_without(perm_list, val), permed=permed):
-                    permed[len(perm_list)].append([val] + j)
+def dynamic_perms(length, permed={}):
+    perm_list = list(range(length))
+    if str(length) not in permed:
+        permed[str(length)] = []
+        if length > 1:
+            for val in perm_list:
+                this_perm = list()
+                for j in dynamic_perms(length - 1, permed=permed)[0]:
+                    to_add = list()
+                    permed[str(len(perm_list))].append([val] + [list_without(perm_list, val)[i] for i in j])
         else:
-            permed[str(len(perm_list))] = [[perm_list]]
-    return permed[str(len(perm_list))]
+            permed[str(length)] = [perm_list]
+    return permed[str(length)], permed
 
-for i in dynamic_perms([0,1,2]):
-    print(i)
+# t= time.time()
+# p, permed = dynamic_perms(8)
+# print(time.time() - t)
+t= time.time()
+dynamic_perms(3)
+print(time.time() - t)
 
 def find_permutations(perm_list):
     all_perms = list()
@@ -171,6 +178,6 @@ def gen_perms():
 # t = time.time()
 # find_perms(list('abcdefgij'))
 # print(time.time() - t)
-# t = time.time()
-# find_permutations(list('abcdefgij'))
-# print(time.time() - t)
+t = time.time()
+find_permutations(list(range(7)))
+print(time.time() - t)
